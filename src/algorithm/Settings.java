@@ -1,5 +1,7 @@
 package algorithm;
 
 public final class Settings {
-  private final static int cycles = 1000;
+  public final static int CYCLES = 1000;
+  public final static double ALPHA = 0.1;
+  public final static double GAMMA = 0.9;
 }

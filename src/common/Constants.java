@@ -1,11 +1,11 @@
 package common;
 
 public final class Constants {
-  public final static short mazeHeight = 3;
-  public final static short mazeWidth = 4;
-  public final static short states = mazeHeight * mazeWidth;
-  public final static char startStep = 'S';
-  public final static char endStep = 'E';
-  public final static char availableStep = 'F';
-  public final static char impossibleStep = 'O';
+  public final static short MAZE_HEIGHT = 3;
+  public final static short MAZE_WIDTH = 4;
+  public final static short STATES = MAZE_HEIGHT * MAZE_WIDTH;
+  public final static char START_STEP = 'S';
+  public final static char END_STEP = 'E';
+  public final static char AVAILABLE_STEP = 'F';
+  public final static char IMPOSSIBLE_STEP = 'O';
 }

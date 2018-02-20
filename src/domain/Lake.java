@@ -8,14 +8,13 @@ import java.io.IOException;
 import java.io.Serializable;
 
 public class Lake implements Serializable {
-  private char[][] lake;
+  private final char[][] lake = new char[Constants.MAZE_HEIGHT][Constants.MAZE_WIDTH];
 
   public Lake() {
     super();
   }
 
-  public final char[][] getLake() throws IOException {
-    lake = new char[Constants.mazeHeight][Constants.mazeWidth];
+  public final char[][] getLake() {
     final File file = new File("resources/frozen-lake.txt");
     try (final FileInputStream fileInputStream = new FileInputStream(file)) {
       int i = 0;
@@ -23,12 +22,12 @@ public class Lake implements Serializable {
       int content;
       while ((content = fileInputStream.read()) != -1) {
         final char c = (char) content;
-        if (c == Constants.endStep) {
+        if (c == Constants.END_STEP) {
           break;
         }
         lake[i][j] = c;
         ++j;
-        if (j == Constants.mazeHeight) {
+        if (j == Constants.MAZE_HEIGHT) {
           j = 0;
           ++i;
         }
