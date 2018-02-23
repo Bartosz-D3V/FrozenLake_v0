@@ -16,6 +16,62 @@ public final class FrozenLake implements Serializable {
     this.lake = lake;
   }
 
+  private void populateRewardLookupTable() {
+    for (int k = 0; k < Constants.STATES; ++k) {
+      final int i = k / Constants.MAZE_WIDTH;
+      final int j = k - i / Constants.MAZE_WIDTH;
+
+      // Initially, we set each element in lake with -1
+      for (int s = 0; s < Constants.STATES; ++s) {
+        rewardLookup[k][s] = -1;
+      }
+
+      // Try to move in all directions
+      if (lake[i][j] != Constants.END_STEP) {
+        final int moveLeft = j - 1;
+        if (moveLeft > -1) {
+          moveHorizontally(k, i, moveLeft);
+        }
+
+        final int moveRight = j + 1;
+        if (moveRight < Constants.MAZE_HEIGHT) {
+          moveHorizontally(k, i, moveRight);
+        }
+
+        final int moveUp = i - 1;
+        if (moveUp < Constants.MAZE_HEIGHT) {
+          moveVertically(k, j, moveUp);
+        }
+      }
+    }
+  }
+
+  private void moveHorizontally(final int k, final int i, final int horizontalMove) {
+    final int target = i * Constants.MAZE_WIDTH + horizontalMove;
+    if (lake[i][horizontalMove] == 'O') {
+      rewardLookup[k][target] = Settings.PENALTY;
+    } else if (lake[i][horizontalMove] == 'E') {
+      rewardLookup[k][target] = Settings.REWARD;
+    } else if (lake[i][horizontalMove] == 'F') {
+      rewardLookup[k][horizontalMove] = 0;
+    } else {
+      rewardLookup[k][horizontalMove] = 0;
+    }
+  }
+
+  private void moveVertically(final int k, final int j, final int verticalMove) {
+    final int target = verticalMove * Constants.MAZE_WIDTH + j;
+    if (lake[verticalMove][j] == 'O') {
+      rewardLookup[k][target] = Settings.PENALTY;
+    } else if (lake[verticalMove][j] == 'E') {
+      rewardLookup[k][target] = Settings.REWARD;
+    } else if (lake[verticalMove][j] == 'F') {
+      rewardLookup[k][j] = 0;
+    } else {
+      rewardLookup[k][j] = 0;
+    }
+  }
+
   private void calcQ() {
     final Random random = new Random();
     for (int i = 0; i < Settings.CYCLES; ++i) {
