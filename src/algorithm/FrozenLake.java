@@ -16,7 +16,7 @@ public final class FrozenLake implements Serializable {
     this.lake = lake;
   }
 
-  private void populateRewardLookupTable() {
+  public void populateRewardLookupTable() {
     for (int k = 0; k < Constants.STATES; ++k) {
       final int i = k / Constants.MAZE_WIDTH;
       final int j = k - i / Constants.MAZE_WIDTH;
@@ -42,37 +42,16 @@ public final class FrozenLake implements Serializable {
         if (moveUp < Constants.MAZE_HEIGHT) {
           moveVertically(k, j, moveUp);
         }
+
+        final int moveDown = i + 1;
+        if (moveDown > Constants.MAZE_HEIGHT) {
+          moveVertically(k, j, moveDown);
+        }
       }
     }
   }
 
-  private void moveHorizontally(final int k, final int i, final int horizontalMove) {
-    final int target = i * Constants.MAZE_WIDTH + horizontalMove;
-    if (lake[i][horizontalMove] == 'O') {
-      rewardLookup[k][target] = Settings.PENALTY;
-    } else if (lake[i][horizontalMove] == 'E') {
-      rewardLookup[k][target] = Settings.REWARD;
-    } else if (lake[i][horizontalMove] == 'F') {
-      rewardLookup[k][horizontalMove] = 0;
-    } else {
-      rewardLookup[k][horizontalMove] = 0;
-    }
-  }
-
-  private void moveVertically(final int k, final int j, final int verticalMove) {
-    final int target = verticalMove * Constants.MAZE_WIDTH + j;
-    if (lake[verticalMove][j] == 'O') {
-      rewardLookup[k][target] = Settings.PENALTY;
-    } else if (lake[verticalMove][j] == 'E') {
-      rewardLookup[k][target] = Settings.REWARD;
-    } else if (lake[verticalMove][j] == 'F') {
-      rewardLookup[k][j] = 0;
-    } else {
-      rewardLookup[k][j] = 0;
-    }
-  }
-
-  private void calcQ() {
+  public void calcQ() {
     final Random random = new Random();
     for (int i = 0; i < Settings.CYCLES; ++i) {
       int currentState = random.nextInt(Constants.STATES);
@@ -100,6 +79,32 @@ public final class FrozenLake implements Serializable {
 
         currentState = nextState;
       }
+    }
+  }
+
+  private void moveHorizontally(final int k, final int i, final int horizontalMove) {
+    final int target = i * Constants.MAZE_WIDTH + horizontalMove;
+    if (lake[i][horizontalMove] == 'O') {
+      rewardLookup[k][target] = Settings.PENALTY;
+    } else if (lake[i][horizontalMove] == 'E') {
+      rewardLookup[k][target] = Settings.REWARD;
+    } else if (lake[i][horizontalMove] == 'F') {
+      rewardLookup[k][horizontalMove] = 0;
+    } else {
+      rewardLookup[k][horizontalMove] = 0;
+    }
+  }
+
+  private void moveVertically(final int k, final int j, final int verticalMove) {
+    final int target = verticalMove * Constants.MAZE_WIDTH + j;
+    if (lake[verticalMove][j] == 'O') {
+      rewardLookup[k][target] = Settings.PENALTY;
+    } else if (lake[verticalMove][j] == 'E') {
+      rewardLookup[k][target] = Settings.REWARD;
+    } else if (lake[verticalMove][j] == 'F') {
+      rewardLookup[k][j] = 0;
+    } else {
+      rewardLookup[k][j] = 0;
     }
   }
 
