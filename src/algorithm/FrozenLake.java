@@ -16,13 +16,13 @@ public final class FrozenLake implements Serializable {
     this.lake = lake;
   }
 
-  private void populateRewardLookupTable() {
-    for (int k = 0; k < Constants.STATES; ++k) {
+  public void populateRewardLookupTable() {
+    for (int k = 0; k < Constants.STATES; k++) {
       final int i = k / Constants.MAZE_WIDTH;
-      final int j = k - i / Constants.MAZE_WIDTH;
+      final int j = k - i * Constants.MAZE_WIDTH;
 
       // Initially, we set each element in lake with -1
-      for (int s = 0; s < Constants.STATES; ++s) {
+      for (int s = 0; s < Constants.STATES; s++) {
         rewardLookup[k][s] = -1;
       }
 
@@ -34,14 +34,50 @@ public final class FrozenLake implements Serializable {
         }
 
         final int moveRight = j + 1;
-        if (moveRight < Constants.MAZE_HEIGHT) {
+        if (moveRight < Constants.MAZE_WIDTH) {
           moveHorizontally(k, i, moveRight);
         }
 
         final int moveUp = i - 1;
-        if (moveUp < Constants.MAZE_HEIGHT) {
+        if (moveUp > -1) {
           moveVertically(k, j, moveUp);
         }
+
+        final int moveDown = i + 1;
+        if (moveDown < Constants.MAZE_HEIGHT) {
+          moveVertically(k, j, moveDown);
+        }
+      }
+    }
+  }
+
+  public void calcQ() {
+    final Random random = new Random();
+    for (int i = 0; i < Settings.CYCLES; i++) {
+      int currentState = random.nextInt(Constants.STATES);
+
+      while (!isFinalState(i)) {
+        // Retrieve all available actions from current state
+        final int[] possibleActions = getPossibleActionsFromState(i);
+
+        // Select any random action from possibleActions
+        final int newRandomAction = random.nextInt(possibleActions.length);
+        // Check new state that corresponds to newRandomAction
+        final int nextState = possibleActions[newRandomAction];
+
+        /*
+          Calculate Q value accordingly to the formula:
+          Q(state, action) = Q(state, action) + alpha * (R(state, action) +
+          gamma * Max(next state, all possible actions) - Q(state, action))
+         */
+        final double tempQ = q[currentState][newRandomAction];
+        final double tempMaxQ = calcMaxQ(nextState);
+        final double tempR = rewardLookup[currentState][nextState];
+        final double formulaResult = tempQ + Settings.ALPHA + tempR +
+          Settings.GAMMA * (tempR + Settings.GAMMA * tempMaxQ - tempQ);
+        q[currentState][nextState] = formulaResult;
+
+        currentState = nextState;
       }
     }
   }
@@ -69,37 +105,6 @@ public final class FrozenLake implements Serializable {
       rewardLookup[k][j] = 0;
     } else {
       rewardLookup[k][j] = 0;
-    }
-  }
-
-  private void calcQ() {
-    final Random random = new Random();
-    for (int i = 0; i < Settings.CYCLES; ++i) {
-      int currentState = random.nextInt(Constants.STATES);
-
-      while (!isFinalState(i)) {
-        // Retrieve all available actions from current state
-        final int[] possibleActions = getPossibleActionsFromState(i);
-
-        // Select any random action from possibleActions
-        final int newRandomAction = random.nextInt(possibleActions.length);
-        // Check new state that corresponds to newRandomAction
-        final int nextState = possibleActions[newRandomAction];
-
-        /*
-          Calculate Q value accordingly to the formula:
-          Q(state, action) = Q(state, action) + alpha * (R(state, action) +
-          gamma * Max(next state, all possible actions) - Q(state, action))
-         */
-        final double tempQ = q[currentState][newRandomAction];
-        final double tempMaxQ = calcMaxQ(nextState);
-        final double tempR = rewardLookup[currentState][nextState];
-        final double formulaResult = tempQ + Settings.ALPHA + tempR +
-          Settings.GAMMA * (tempR + Settings.GAMMA * tempMaxQ - tempQ);
-        q[currentState][nextState] = formulaResult;
-
-        currentState = nextState;
-      }
     }
   }
 
@@ -136,7 +141,7 @@ public final class FrozenLake implements Serializable {
 
   private int[] getPossibleActionsFromState(final int state) {
     final List<Integer> possibleActions = new ArrayList<>();
-    for (int i = 0; i < Constants.STATES; ++i) {
+    for (int i = 0; i < Constants.STATES; i++) {
       if (rewardLookup[state][i] != -1) {
         possibleActions.add(i);
       }
