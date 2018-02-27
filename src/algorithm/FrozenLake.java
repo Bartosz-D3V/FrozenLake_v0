@@ -17,12 +17,12 @@ public final class FrozenLake implements Serializable {
   }
 
   public void populateRewardLookupTable() {
-    for (int k = 0; k < Constants.STATES; ++k) {
+    for (int k = 0; k < Constants.STATES; k++) {
       final int i = k / Constants.MAZE_WIDTH;
-      final int j = k - i / Constants.MAZE_WIDTH;
+      final int j = k - i * Constants.MAZE_WIDTH;
 
       // Initially, we set each element in lake with -1
-      for (int s = 0; s < Constants.STATES; ++s) {
+      for (int s = 0; s < Constants.STATES; s++) {
         rewardLookup[k][s] = -1;
       }
 
@@ -34,17 +34,17 @@ public final class FrozenLake implements Serializable {
         }
 
         final int moveRight = j + 1;
-        if (moveRight < Constants.MAZE_HEIGHT) {
+        if (moveRight < Constants.MAZE_WIDTH) {
           moveHorizontally(k, i, moveRight);
         }
 
         final int moveUp = i - 1;
-        if (moveUp < Constants.MAZE_HEIGHT) {
+        if (moveUp > -1) {
           moveVertically(k, j, moveUp);
         }
 
         final int moveDown = i + 1;
-        if (moveDown > Constants.MAZE_HEIGHT) {
+        if (moveDown < Constants.MAZE_HEIGHT) {
           moveVertically(k, j, moveDown);
         }
       }
@@ -53,7 +53,7 @@ public final class FrozenLake implements Serializable {
 
   public void calcQ() {
     final Random random = new Random();
-    for (int i = 0; i < Settings.CYCLES; ++i) {
+    for (int i = 0; i < Settings.CYCLES; i++) {
       int currentState = random.nextInt(Constants.STATES);
 
       while (!isFinalState(i)) {
@@ -141,7 +141,7 @@ public final class FrozenLake implements Serializable {
 
   private int[] getPossibleActionsFromState(final int state) {
     final List<Integer> possibleActions = new ArrayList<>();
-    for (int i = 0; i < Constants.STATES; ++i) {
+    for (int i = 0; i < Constants.STATES; i++) {
       if (rewardLookup[state][i] != -1) {
         possibleActions.add(i);
       }

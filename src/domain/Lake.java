@@ -26,10 +26,10 @@ public class Lake implements Serializable {
           continue;
         }
         lake[i][j] = c;
-        ++j;
+        j++;
         if (j == Constants.MAZE_WIDTH) {
           j = 0;
-          ++i;
+          i++;
         }
       }
       fileInputStream.close();
