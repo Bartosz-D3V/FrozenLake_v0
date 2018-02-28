@@ -56,9 +56,9 @@ public final class FrozenLake implements Serializable {
     for (int i = 0; i < Settings.CYCLES; i++) {
       int currentState = random.nextInt(Constants.STATES);
 
-      while (!isFinalState(i)) {
+      while (!isFinalState(currentState)) {
         // Retrieve all available actions from current state
-        final int[] possibleActions = getPossibleActionsFromState(i);
+        final int[] possibleActions = getPossibleActionsFromState(currentState);
 
         // Select any random action from possibleActions
         final int newRandomAction = random.nextInt(possibleActions.length);
@@ -70,11 +70,11 @@ public final class FrozenLake implements Serializable {
           Q(state, action) = Q(state, action) + alpha * (R(state, action) +
           gamma * Max(next state, all possible actions) - Q(state, action))
          */
-        final double tempQ = q[currentState][newRandomAction];
+        final double tempQ = q[currentState][nextState];
         final double tempMaxQ = calcMaxQ(nextState);
         final double tempR = rewardLookup[currentState][nextState];
-        final double formulaResult = tempQ + Settings.ALPHA + tempR +
-          Settings.GAMMA * (tempR + Settings.GAMMA * tempMaxQ - tempQ);
+        final double formulaResult = tempQ + Settings.ALPHA *
+          (tempR + Settings.GAMMA * tempMaxQ - tempQ);
         q[currentState][nextState] = formulaResult;
 
         currentState = nextState;
@@ -151,7 +151,7 @@ public final class FrozenLake implements Serializable {
 
   private boolean isFinalState(final int index) {
     final int i = index / Constants.MAZE_WIDTH;
-    final int j = index / Constants.MAZE_HEIGHT;
+    final int j = index - i * Constants.MAZE_WIDTH;
 
     return lake[i][j] == Constants.END_STEP;
   }
