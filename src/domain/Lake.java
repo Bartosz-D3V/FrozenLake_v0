@@ -22,7 +22,10 @@ public class Lake implements Serializable {
       int content;
       while ((content = fileInputStream.read()) != -1) {
         final char c = (char) content;
-        if (c != 'S' && c != 'F' && c != 'O' && c != 'E') {
+        if (c != Constants.START_STEP
+            && c != Constants.AVAILABLE_STEP
+            && c != Constants.IMPOSSIBLE_STEP
+            && c != Constants.END_STEP) {
           continue;
         }
         lake[i][j] = c;
