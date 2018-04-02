@@ -1,7 +1,7 @@
 import algorithm.FrozenLake;
 import domain.Lake;
 
-public class Main {
+public final class Main {
 
   public static void main(final String[] args) {
     final Lake lake = new Lake();

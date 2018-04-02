@@ -1,11 +1,13 @@
 package common;
 
-public final class Constants {
-  public final static short MAZE_HEIGHT = 3;
-  public final static short MAZE_WIDTH = 4;
-  public final static short STATES = MAZE_HEIGHT * MAZE_WIDTH;
-  public final static char START_STEP = 'S';
-  public final static char END_STEP = 'E';
-  public final static char AVAILABLE_STEP = 'F';
-  public final static char IMPOSSIBLE_STEP = 'O';
+import java.io.Serializable;
+
+public final class Constants implements Serializable {
+  public static final short MAZE_HEIGHT = 3;
+  public static final short MAZE_WIDTH = 4;
+  public static final short STATES = MAZE_HEIGHT * MAZE_WIDTH;
+  public static final char START_STEP = 'S';
+  public static final char END_STEP = 'E';
+  public static final char AVAILABLE_STEP = 'F';
+  public static final char IMPOSSIBLE_STEP = 'O';
 }

@@ -26,8 +26,9 @@ public final class FrozenLake implements Serializable {
         rewardLookup[k][s] = -1;
       }
 
-      // Try to move in all directions
+      // Try to move in all directions if not a final state
       if (lake[i][j] != Constants.END_STEP) {
+
         final int moveLeft = j - 1;
         if (moveLeft > -1) {
           moveHorizontally(k, i, moveLeft);
@@ -66,15 +67,15 @@ public final class FrozenLake implements Serializable {
         final int nextState = possibleActions[newRandomAction];
 
         /*
-          Calculate Q value accordingly to the formula:
-          Q(state, action) = Q(state, action) + alpha * (R(state, action) +
-          gamma * Max(next state, all possible actions) - Q(state, action))
-         */
+         Calculate Q value accordingly to the formula:
+         Q(state, action) = Q(state, action) + alpha * (R(state, action) +
+         gamma * Max(next state, all possible actions) - Q(state, action))
+        */
         final double tempQ = q[currentState][nextState];
         final double tempMaxQ = calcMaxQ(nextState);
         final double tempR = rewardLookup[currentState][nextState];
-        final double formulaResult = tempQ + Settings.ALPHA *
-          (tempR + Settings.GAMMA * tempMaxQ - tempQ);
+        final double formulaResult =
+            tempQ + Settings.ALPHA * (tempR + Settings.GAMMA * tempMaxQ - tempQ);
         q[currentState][nextState] = formulaResult;
 
         currentState = nextState;
@@ -88,8 +89,6 @@ public final class FrozenLake implements Serializable {
       rewardLookup[k][target] = Settings.PENALTY;
     } else if (lake[i][horizontalMove] == 'E') {
       rewardLookup[k][target] = Settings.REWARD;
-    } else if (lake[i][horizontalMove] == 'F') {
-      rewardLookup[k][horizontalMove] = 0;
     } else {
       rewardLookup[k][horizontalMove] = 0;
     }
@@ -101,8 +100,6 @@ public final class FrozenLake implements Serializable {
       rewardLookup[k][target] = Settings.PENALTY;
     } else if (lake[verticalMove][j] == 'E') {
       rewardLookup[k][target] = Settings.REWARD;
-    } else if (lake[verticalMove][j] == 'F') {
-      rewardLookup[k][j] = 0;
     } else {
       rewardLookup[k][j] = 0;
     }
