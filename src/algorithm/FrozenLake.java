@@ -75,7 +75,7 @@ public final class FrozenLake implements Serializable {
         final double tempMaxQ = calcMaxQ(nextState);
         final double tempR = rewardLookup[currentState][nextState];
         final double formulaResult =
-            tempQ + Settings.ALPHA * (tempR + Settings.GAMMA * tempMaxQ - tempQ);
+          tempQ + Settings.ALPHA * (tempR + Settings.GAMMA * tempMaxQ - tempQ);
         q[currentState][nextState] = formulaResult;
 
         currentState = nextState;
@@ -90,7 +90,7 @@ public final class FrozenLake implements Serializable {
     } else if (lake[i][horizontalMove] == 'E') {
       rewardLookup[k][target] = Settings.REWARD;
     } else {
-      rewardLookup[k][horizontalMove] = 0;
+      rewardLookup[k][target] = 1;
     }
   }
 
@@ -101,7 +101,7 @@ public final class FrozenLake implements Serializable {
     } else if (lake[verticalMove][j] == 'E') {
       rewardLookup[k][target] = Settings.REWARD;
     } else {
-      rewardLookup[k][j] = 0;
+      rewardLookup[k][target] = 1;
     }
   }
 
@@ -125,11 +125,11 @@ public final class FrozenLake implements Serializable {
     // maxValue initially set to the lowest possible value
     double maxValue = Double.MIN_VALUE;
 
-    for (int nextPossibleMovement : actionsFromState) {
-      final double movementValue = q[currentState][nextMovement];
+    for (int nextPossibleState : actionsFromState) {
+      final double movementValue = q[currentState][nextPossibleState];
       if (movementValue > maxValue) {
         maxValue = movementValue;
-        nextMovement = nextPossibleMovement;
+        nextMovement = nextPossibleState;
       }
     }
 
@@ -151,5 +151,12 @@ public final class FrozenLake implements Serializable {
     final int j = index - i * Constants.MAZE_WIDTH;
 
     return lake[i][j] == Constants.END_STEP;
+  }
+
+  public void printSelectedStates() {
+    for (int state = 0; state < Constants.STATES; state++) {
+      final int nextState = getNextMovement(state);
+      System.out.println("From state " + state + " go to state " + nextState);
+    }
   }
 }
