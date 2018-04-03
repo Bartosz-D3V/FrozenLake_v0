@@ -7,5 +7,5 @@ public final class Settings implements Serializable {
   public static final double ALPHA = 0.1;
   public static final double GAMMA = 0.9;
   public static final int REWARD = 1000;
-  public static final int PENALTY = -10;
+  public static final int PENALTY = -1000;
 }

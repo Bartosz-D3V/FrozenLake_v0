@@ -8,5 +8,6 @@ public final class Main {
     final FrozenLake frozenLake = new FrozenLake(lake.getLake());
     frozenLake.populateRewardLookupTable();
     frozenLake.calcQ();
+    frozenLake.printSelectedStates();
   }
 }
