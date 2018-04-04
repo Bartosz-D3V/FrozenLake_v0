@@ -1,3 +1,6 @@
-S  F  F  F
-F  O  F  F
-F  F  F  E
+S  F  F  F  F  O  F  E
+F  O  F  F  F  O  F  F
+F  F  F  O  F  O  F  F
+F  F  O  F  F  F  F  O
+F  F  F  F  O  F  F  F
+O  F  O  O  F  F  F  F
