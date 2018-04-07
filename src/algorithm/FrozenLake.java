@@ -9,7 +9,7 @@ import java.util.Random;
 
 public final class FrozenLake implements Serializable {
   private final char[][] lake;
-  private final double[][] rewardLookup = new double[Constants.STATES][Constants.STATES];
+  private final int[][] rewardLookup = new int[Constants.STATES][Constants.STATES];
   private final double[][] q = new double[Constants.STATES][Constants.STATES];
 
   /**
@@ -31,6 +31,11 @@ public final class FrozenLake implements Serializable {
     for (int k = 0; k < Constants.STATES; k++) {
       final int i = k / Constants.MAZE_WIDTH;
       final int j = k - i * Constants.MAZE_WIDTH;
+
+      // Initially, set reward to -1
+      for (int x = 0; x < Constants.STATES; x++) {
+        rewardLookup[k][x] = -1;
+      }
 
       // Try to move in all directions if not in a final state
       if (lake[i][j] != Constants.END_STEP) {
@@ -59,6 +64,25 @@ public final class FrozenLake implements Serializable {
           moveVertically(k, j, moveDown);
         }
       }
+    }
+    printR(rewardLookup);
+  }
+
+  private void printR(final int[][] matrix) {
+    for (int i = 0; i < Constants.STATES; i++) {
+      for (int j = 0; j < Constants.STATES; j++) {
+        System.out.printf("%4s", matrix[i][j]);
+      }
+      System.out.println(System.lineSeparator());
+    }
+  }
+
+  private void printQ(final double[][] q) {
+    for (int i = 0; i < Constants.STATES; i++) {
+      for (int j = 0; j < Constants.STATES; j++) {
+        System.out.printf("%4s", q[i][j]);
+      }
+      System.out.println(System.lineSeparator());
     }
   }
 
@@ -109,8 +133,10 @@ public final class FrozenLake implements Serializable {
       rewardLookup[k][target] = Settings.PENALTY;
     } else if (lake[i][horizontalMove] == 'E') {
       rewardLookup[k][target] = Settings.REWARD;
-    } else {
+    } else if (lake[i][horizontalMove] == 'F') {
       rewardLookup[k][target] = 1;
+    } else {
+      rewardLookup[k][target] = -5;
     }
   }
 
@@ -127,8 +153,10 @@ public final class FrozenLake implements Serializable {
       rewardLookup[k][target] = Settings.PENALTY;
     } else if (lake[verticalMove][j] == 'E') {
       rewardLookup[k][target] = Settings.REWARD;
-    } else {
+    } else if (lake[verticalMove][j] == 'F') {
       rewardLookup[k][target] = 1;
+    } else {
+      rewardLookup[k][target] = -5;
     }
   }
 
