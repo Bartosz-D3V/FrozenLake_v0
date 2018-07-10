@@ -10,10 +10,15 @@ The grid is built with 8x6 grid, although, extending or shrinking the grid is av
 
 ## Domain
 Grid is built with 4 different characters:
+
 S – (Start) Indicates the starting point – only one in the grid
+
 F – (Frozen) Indicates frozen floe that the algorithm can use to move around the lake
+
 O – (Open) Indicates a hole in a frozen lake which cannot be accessed
+
 E – (End) Indicates the destination – only one in the grid
+
 In addition, it is only possible to move to neighbouring field – either by moving up, down, left or right.
 Moving diagonally is **not** permitted.
 
@@ -24,10 +29,15 @@ By default the table consist of 6x8 grid, but can be changed easily, accordingly
 The reward matrix defines the values that the agent will receive upon moving to the state.
 Each row in the R matrix represents a state that the agent can occupy, whilst each value of the row provides the reward (or penalty) that the agent will receive upon moving to that state.
 Each cell contains one of four values:
+
 a)	1 – for possible transitions – for instance, moving from state 2 to state 22.
+
 b)	-1 for impossible transitions – diagonal movements, or movements to floes that are farer than 1 step are marked as impossible.
+
 c)	-100 – penalty for stepping into the hole.
+
 d)	2000 – reward for reaching the final state.
+
 e)	-5 – penalty for moving to the state with lower value than current step. 
 
 Program needs approximately 90 training cycles to find the most optimal way.
